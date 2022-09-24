@@ -4,7 +4,7 @@ using WebApiAutores.Controllers.Entidades;
 
 namespace WebApiAutores.Controllers
 {
-    [ApiController]
+    [ApiController]                     //Decorador
     [Route("api/autores")]
     public class AutoresController: ControllerBase
     {
@@ -15,11 +15,11 @@ namespace WebApiAutores.Controllers
             this.context = context;
         }
         [HttpGet]   //api/autores
-        [HttpGet("listado")]  // api/autores/listado  
-        [HttpGet("/listado")] //listado
+     //   [HttpGet("listado")]  // api/autores/listado  
+     //   [HttpGet("/listado")] //listado
         public async Task<ActionResult<List<Autor>>> Get()
         {
-            return await context.Autores.Include(x => x.Libros).ToListAsync();
+            return await context.Autores.ToListAsync();
         }
 
         [HttpGet("primer")]
@@ -28,10 +28,27 @@ namespace WebApiAutores.Controllers
             return await context.Autores.FirstOrDefaultAsync();
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Autor>> Get(int id)
+        {
+            var autor = await context.Autores.FirstOrDefaultAsync(x => x.Id == id);
+            if (autor == null)
+            {
+                return NotFound();
+            }
+            return autor;
+        }
+
 
         [HttpPost]
-        public async Task<ActionResult> Post(Autor autor)
+        public async Task<ActionResult> Post([FromBody]Autor autor)
         {
+            var existeAutorConElMismoNombre = await context.Autores.AnyAsync(x => x.Nombre == autor.Nombre);
+
+            if (existeAutorConElMismoNombre)
+            {
+                return BadRequest($"Ya existe un autor con el nombre {autor.Nombre}");
+            }
             context.Add(autor);
             await context.SaveChangesAsync();
             return Ok();
