@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using WebApiAutores.Middleware;
+using Microsoft.OpenApi.Models;
 
 namespace WebApiAutores
 {
@@ -25,23 +26,21 @@ namespace WebApiAutores
             options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
 
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIAutores", Version = "v1" });
+            });
+            services.AddAutoMapper(typeof(Startup)); 
 
         }
-
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
 
             //app.UseMiddleware<LoguearRespuestaHTTPMiddleware>();
             app.UseLoguearRespuestaHTTP();
 
-            app.Map("/ruta1", app =>
-           {
-               app.Run(async context =>
-               {
-                   await context.Response.WriteAsync("Estoy interceptando la tuberia");
-               });
-           });
+
      
             if (env.IsDevelopment())
             {

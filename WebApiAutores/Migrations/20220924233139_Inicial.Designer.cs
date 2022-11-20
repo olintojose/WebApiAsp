@@ -11,7 +11,7 @@ using WebApiAutores;
 namespace WebApiAutores.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220313171223_Inicial")]
+    [Migration("20220924233139_Inicial")]
     partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,7 +23,7 @@ namespace WebApiAutores.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("WebApiAutores.Controllers.Entidades.Autor", b =>
+            modelBuilder.Entity("WebApiAutores.Entidades.Autor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -41,7 +41,7 @@ namespace WebApiAutores.Migrations
                     b.ToTable("Autores");
                 });
 
-            modelBuilder.Entity("WebApiAutores.Controllers.Entidades.Libro", b =>
+            modelBuilder.Entity("WebApiAutores.Entidades.Libro", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
